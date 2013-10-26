@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PureMessaging/PureMessaging.iml" filepath="$PROJECT_DIR$/PureMessaging/PureMessaging.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PureMessaging/PureMessaging-PureMessaging.iml" filepath="$PROJECT_DIR$/PureMessaging/PureMessaging-PureMessaging.iml" />
       <module fileurl="file://$PROJECT_DIR$/PureMessagingProject.iml" filepath="$PROJECT_DIR$/PureMessagingProject.iml" />
     </modules>
   </component>

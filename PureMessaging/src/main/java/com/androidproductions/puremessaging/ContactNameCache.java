@@ -19,13 +19,13 @@ public final class ContactNameCache {
 
     public static void Initialize(Context context, int maxSize)
     {
-        if (_cache==null) throw new IllegalStateException("Cache already initialized");
+        if (_cache!=null) throw new IllegalStateException("Cache already initialized");
         _cache = new ContactNameCache(context, maxSize);
     }
 
     public static void Release()
     {
-        if (_cache!=null) throw new IllegalStateException("Cache not initialized");
+        if (_cache==null) throw new IllegalStateException("Cache not initialized");
         _cache.destroy();
         _cache = null;
     }

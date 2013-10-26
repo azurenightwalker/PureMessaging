@@ -51,6 +51,10 @@ public class ConversationListFragment extends ListFragment implements LoaderMana
         @Override
         public void onItemSelected(long id) {
         }
+
+        @Override
+        public void onGroupSelected(long id) {
+        }
     };
 
     /**
@@ -127,7 +131,7 @@ public class ConversationListFragment extends ListFragment implements LoaderMana
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        mCallbacks.onItemSelected(id);
+        mCallbacks.onGroupSelected(id);
     }
 
     @Override

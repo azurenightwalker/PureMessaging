@@ -11,12 +11,16 @@ import android.widget.CursorAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.androidproductions.puremessaging.ContactNameCache;
 import com.androidproductions.puremessaging.R;
 
 public class ConversationSummaryCursorAdapter extends CursorAdapter {
 
+    private final ContactNameCache contactNameCache;
+
     public ConversationSummaryCursorAdapter(final Context context) {
         super(context,null,0);
+        contactNameCache = ContactNameCache.getInstance();
     }
 
     @Override
@@ -62,25 +66,7 @@ public class ConversationSummaryCursorAdapter extends CursorAdapter {
             }
         }
 
-        String name = address;
-
-        final Uri uri = Uri.withAppendedPath(
-                ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(address)
-        );
-        if (uri != null)
-        {
-            final Cursor c = context.getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME, ContactsContract.PhoneLookup._ID},null,null,null);
-            if (c != null)
-            {
-                if (c.moveToFirst())
-                {
-                    name = c.getString(c.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
-                }
-                c.close();
-            }
-        }
-
-        mName.setText(name);
+        mName.setText(contactNameCache.get(address));
         mDesc.setText(snippet);
         return ret;
     }

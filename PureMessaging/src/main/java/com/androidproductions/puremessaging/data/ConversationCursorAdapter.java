@@ -11,12 +11,21 @@ import android.widget.CursorAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.androidproductions.puremessaging.ContactNameCache;
+import com.androidproductions.puremessaging.DateHelpers;
 import com.androidproductions.puremessaging.R;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class ConversationCursorAdapter extends CursorAdapter {
 
+    private final ContactNameCache contactNameCache;
+    private ArrayList<ArrayList<String>> mArrayList;
+
     public ConversationCursorAdapter(final Context context) {
         super(context,null,0);
+        contactNameCache = ContactNameCache.getInstance();
     }
 
     @Override
@@ -36,35 +45,34 @@ public class ConversationCursorAdapter extends CursorAdapter {
     }
 
     private View populateView(Cursor cursor, View ret, Context context) {
-        final TextView mName = (TextView) ret.findViewById(R.id.contact_name);
+        final TextView mTime = (TextView) ret.findViewById(R.id.message_time);
         final TextView mDesc = (TextView) ret.findViewById(R.id.message);
-
-        final int addressCol = cursor.getColumnIndexOrThrow(ConversationContract.Address);
-        final int bodyCol = cursor.getColumnIndex(ConversationContract.Body);
-
-        final String address = cursor.getString(addressCol);
-        final String body = cursor.getString(bodyCol);
-
-        String name = address;
-
-        final Uri uri = Uri.withAppendedPath(
-                ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(address)
-        );
-        if (uri != null)
-        {
-            final Cursor c = context.getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME, ContactsContract.PhoneLookup._ID},null,null,null);
-            if (c != null)
-            {
-                if (c.moveToFirst())
-                {
-                    name = c.getString(c.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
-                }
-                c.close();
-            }
-        }
+        ArrayList<String> data = mArrayList.get(cursor.getPosition());
+        final long time = Long.parseLong(data.get(0));
+        final String body = data.get(1);
 
         mDesc.setText(body);
-        mName.setText(name);
+        mTime.setText(DateHelpers.GetRecentTime(time));
         return ret;
+    }
+
+    @Override
+    public Cursor swapCursor(Cursor newCursor) {
+        mArrayList = new ArrayList<ArrayList<String>>();
+        if (newCursor != null)
+        {
+            newCursor.moveToFirst();
+            final int timeCol = newCursor.getColumnIndexOrThrow(ConversationContract.Date);
+            final int bodyCol = newCursor.getColumnIndex(ConversationContract.Body);
+            while(!newCursor.isAfterLast()) {
+                ArrayList<String> data = new ArrayList<String>();
+                data.add(String.valueOf(newCursor.getLong(timeCol)));
+                data.add(newCursor.getString(bodyCol));
+                mArrayList.add(data); //add the item
+                newCursor.moveToNext();
+            }
+            Collections.reverse(mArrayList);
+        }
+        return super.swapCursor(newCursor);
     }
 }

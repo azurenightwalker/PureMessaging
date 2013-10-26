@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 
+import com.androidproductions.puremessaging.data.ConversationAdapter;
 import com.androidproductions.puremessaging.data.ConversationContract;
 import com.androidproductions.puremessaging.data.ConversationCursorAdapter;
 import com.androidproductions.puremessaging.data.ConversationSummaryCursorAdapter;
@@ -43,7 +44,7 @@ public class ConversationDetailFragment extends ListFragment implements LoaderMa
      * The current activated item position. Only used on tablets.
      */
     private int mActivatedPosition = ListView.INVALID_POSITION;
-    private CursorAdapter mAdapter;
+    private ConversationAdapter mAdapter;
 
     /**
      * A callback interface that all activities containing this fragment must
@@ -60,6 +61,9 @@ public class ConversationDetailFragment extends ListFragment implements LoaderMa
         @Override
         public void onItemSelected(long id) {
         }
+        @Override
+        public void onGroupSelected(long id) {
+        }
     };
     private long thread_id;
 
@@ -74,7 +78,7 @@ public class ConversationDetailFragment extends ListFragment implements LoaderMa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         thread_id = getArguments().getLong(ConversationContract.ThreadId);
-        mAdapter = new ConversationCursorAdapter(getActivity());
+        mAdapter = new ConversationAdapter(getActivity(),null);
         setListAdapter(mAdapter);
         this.getLoaderManager().initLoader(1, null, this);
     }
@@ -98,17 +102,14 @@ public class ConversationDetailFragment extends ListFragment implements LoaderMa
     @Override
     public void onLoadFinished(final Loader<Cursor> cursorLoader, final Cursor cursor) {
         if(mAdapter!=null && cursor!=null)
-            mAdapter.swapCursor(cursor);
+            mAdapter.appendItems(cursor);
         else
             Log.v("PM", "OnLoadFinished: mAdapter is null");
     }
 
     @Override
     public void onLoaderReset(final Loader<Cursor> cursorLoader) {
-        if(mAdapter!=null)
-            mAdapter.swapCursor(null);
-        else
-            Log.v("PM","OnLoadFinished: mAdapter is null");
+
     }
 
     @Override
