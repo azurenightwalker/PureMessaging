@@ -21,58 +21,47 @@ import java.util.Collections;
 
 public class ConversationAdapter extends ArrayAdapter {
     private final Context context;
-    private final ArrayList<ArrayList<String>> mArrayList;
 
     public ConversationAdapter(Context context, Cursor newCursor) {
         super(context, R.layout.message_list_item);
         this.context = context;
-        mArrayList = new ArrayList<ArrayList<String>>();
+        processData(newCursor);
+    }
+
+    private void processData(Cursor newCursor) {
         if (newCursor != null)
         {
+            final ArrayList<Message> mArrayList = new ArrayList<Message>();
             newCursor.moveToFirst();
             final int timeCol = newCursor.getColumnIndexOrThrow(ConversationContract.Date);
             final int bodyCol = newCursor.getColumnIndex(ConversationContract.Body);
             while(!newCursor.isAfterLast()) {
-                ArrayList<String> data = new ArrayList<String>();
-                data.add(String.valueOf(newCursor.getLong(timeCol)));
-                data.add(newCursor.getString(bodyCol));
-                mArrayList.add(data); //add the item
+                mArrayList.add(
+                        new Message(
+                                newCursor.getLong(timeCol),
+                                newCursor.getString(bodyCol))
+                ); //add the item
                 newCursor.moveToNext();
             }
             Collections.reverse(mArrayList);
+            addAll(mArrayList);
         }
     }
 
     public void appendItems(Cursor newCursor) {
-        if (newCursor != null)
-        {
-            newCursor.moveToFirst();
-            final int timeCol = newCursor.getColumnIndexOrThrow(ConversationContract.Date);
-            final int bodyCol = newCursor.getColumnIndex(ConversationContract.Body);
-            while(!newCursor.isAfterLast()) {
-                ArrayList<String> data = new ArrayList<String>();
-                data.add(String.valueOf(newCursor.getLong(timeCol)));
-                data.add(newCursor.getString(bodyCol));
-                mArrayList.add(data); //add the item
-                newCursor.moveToNext();
-            }
-            Collections.reverse(mArrayList);
-        }
+        processData(newCursor);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) context
+        final LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.message_list_item, parent, false);
         final TextView mTime = (TextView) rowView.findViewById(R.id.message_time);
         final TextView mDesc = (TextView) rowView.findViewById(R.id.message);
-        ArrayList<String> data = mArrayList.get(position);
-        final long time = Long.parseLong(data.get(0));
-        final String body = data.get(1);
-
-        mDesc.setText(body);
-        mTime.setText(DateHelpers.GetRecentTime(time));
+        final Message data = (Message) getItem(position);
+        mDesc.setText(data.getBody());
+        mTime.setText(DateHelpers.GetRecentTime(data.getDate()));
 
         return rowView;
     }
