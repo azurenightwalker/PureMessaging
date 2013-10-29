@@ -5,11 +5,17 @@
     android:layout_marginLeft="@dimen/list_horizontal_margin"
     android:layout_marginRight="@dimen/list_horizontal_margin"
     android:id="@+id/wrapper">
+    <ImageView
+        android:id="@+id/contact_image"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true" />
     <TextView
         android:id="@+id/contact_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/contact_image"
         android:textColor="?android:textColorPrimary"
         android:textSize="18sp"
         android:ellipsize="end"
@@ -18,9 +24,11 @@
         android:id="@+id/snippet"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_toRightOf="@id/contact_image"
         android:paddingBottom="5dip"
         android:textSize="14sp"
         android:textColor="?android:textColorSecondary"
-        android:layout_below="@id/contact_name"/>
+        android:layout_below="@id/contact_name"
+        android:ellipsize="end"
+        android:singleLine="true"/>
 </RelativeLayout>

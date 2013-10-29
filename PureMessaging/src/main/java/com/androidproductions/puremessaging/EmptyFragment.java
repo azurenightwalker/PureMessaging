@@ -14,7 +14,7 @@ import android.widget.TextView;
  * in two-pane mode (on tablets) or a {@link ConversationDetailActivity}
  * on handsets.
  */
-public class ConversationFragment extends Fragment {
+public class EmptyFragment extends Fragment {
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
@@ -25,7 +25,7 @@ public class ConversationFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ConversationFragment() {
+    public EmptyFragment() {
     }
 
     @Override
@@ -36,8 +36,6 @@ public class ConversationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_conversation_detail, container, false);
-        ((TextView) rootView.findViewById(R.id.conversation_detail)).setText("Woop!");
-        return rootView;
+        return inflater.inflate(R.layout.empty_fragment, container, false);
     }
 }

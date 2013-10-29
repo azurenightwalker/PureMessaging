@@ -3,5 +3,8 @@
 
     <string name="app_name">Pure Messaging</string>
     <string name="title_conversation_detail">Conversation Detail</string>
+    <string name="drawer_open">Drawer Open</string>
+    <string name="drawer_close">Drawer Closed</string>
+    <string name="empty_fragment_text">Please select a conversation</string>
 
 </resources>

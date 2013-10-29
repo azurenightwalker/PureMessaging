@@ -22,5 +22,6 @@ public class PureMessagingApplication extends Application {
     private void InitializeSingletons()
     {
         ContactNameCache.Initialize(getApplicationContext(),10);
+        ContactImageCache.Initialize(getApplicationContext(),10);
     }
 }
