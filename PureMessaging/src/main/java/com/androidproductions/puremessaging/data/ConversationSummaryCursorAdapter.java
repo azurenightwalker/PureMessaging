@@ -27,27 +27,34 @@ public class ConversationSummaryCursorAdapter extends CursorAdapter {
         contactPhotoCache = ContactImageCache.getInstance();
     }
 
+    static class ViewHolder {
+        TextView mName;
+        TextView mDesc;
+        ImageView mImage;
+    }
+
     @Override
     public View newView(final Context context, final Cursor cursor, final ViewGroup parent) {
         final LayoutInflater inflater = LayoutInflater.from(context);
         final RelativeLayout ret = (RelativeLayout) inflater.inflate(R.layout.conversation_list_item, parent, false);
+        ViewHolder holder = new ViewHolder();
+        holder.mName = (TextView) ret.findViewById(R.id.contact_name);
+        holder.mDesc = (TextView) ret.findViewById(R.id.snippet);
+        holder.mImage = (ImageView) ret.findViewById(R.id.contact_image);
+        ret.setTag(holder);
         if (ret != null)
         {
-            return populateView(cursor, ret, context);
+            populateView(cursor, holder, context);
         }
-        return null;
+        return ret;
     }
 
     @Override
     public void bindView(final View view, final Context context, final Cursor cursor) {
-        populateView(cursor,view, context);
+        populateView(cursor,(ViewHolder)view.getTag(), context);
     }
 
-    private View populateView(Cursor cursor, View ret, Context context) {
-        final TextView mName = (TextView) ret.findViewById(R.id.contact_name);
-        final TextView mDesc = (TextView) ret.findViewById(R.id.snippet);
-        final ImageView mImage = (ImageView) ret.findViewById(R.id.contact_image);
-
+    private void populateView(Cursor cursor, final ViewHolder viewHolder, Context context) {
         final int nameIdx = cursor.getColumnIndex(ConversationSummaryContract.RecipientIds);
         final int snip = cursor.getColumnIndex(ConversationSummaryContract.Snippet);
         final String recs = cursor.getString(nameIdx);
@@ -71,10 +78,14 @@ public class ConversationSummaryCursorAdapter extends CursorAdapter {
             }
         }
 
-        mName.setText(contactNameCache.get(address));
-        mDesc.setText(snippet);
-        //mImage.setImageBitmap(contactPhotoCache.get(address));
-        return ret;
+        viewHolder.mName.setText(contactNameCache.get(address));
+        viewHolder.mDesc.setText(snippet);
+        final String finalAddress = address;
+        new Thread(new Runnable() {
+            public void run() {
+                viewHolder.mImage.setImageBitmap(contactPhotoCache.get(finalAddress));
+            }
+        }).run();
     }
 
 

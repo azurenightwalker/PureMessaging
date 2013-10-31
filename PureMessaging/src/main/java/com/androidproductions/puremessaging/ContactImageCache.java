@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.util.LruCache;
 
 import java.io.InputStream;
@@ -58,6 +59,8 @@ public final class ContactImageCache {
     private Bitmap findContactBitmap(String key) {
         long id = -1L;
         ContentResolver cr = mContext.getContentResolver();
+        if (key.equals("SELF"))
+            return loadProfileImage();
         final Uri uri = Uri.withAppendedPath(
                 ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(key)
         );
@@ -82,12 +85,31 @@ public final class ContactImageCache {
             return getDefaultImage();
         }
         Uri uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, id);
-        InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(
-                mContext.getContentResolver(), uri);
-        if (input == null) {
-            return getDefaultImage();
+        return _getContactImage(uri);
+    }
+
+    public Bitmap loadProfileImage() {
+        return _getContactImage(ContactsContract.Profile.CONTENT_URI);
+    }
+
+    private Bitmap _getContactImage(final Uri uri)
+    {
+        try
+        {
+            final InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(
+                    mContext.getContentResolver() ,uri);
+            if (input != null)
+            {
+                final Bitmap img = BitmapFactory.decodeStream(input);
+                input.close();
+                return img;
+            }
         }
-        return BitmapFactory.decodeStream(input);
+        catch(Exception ex)
+        {
+            Log.d("PureMessaging", "Couldnt find image");
+        }
+        return getDefaultImage();
     }
 
     public Bitmap getDefaultImage()

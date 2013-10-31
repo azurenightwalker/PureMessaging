@@ -2,8 +2,6 @@ package com.androidproductions.puremessaging.data;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,18 +18,16 @@ import java.util.Collections;
 
 public class ConversationCursorAdapter extends CursorAdapter {
 
-    private final ContactNameCache contactNameCache;
     private ArrayList<ArrayList<String>> mArrayList;
 
     public ConversationCursorAdapter(final Context context) {
         super(context,null,0);
-        contactNameCache = ContactNameCache.getInstance();
     }
 
     @Override
     public View newView(final Context context, final Cursor cursor, final ViewGroup parent) {
         final LayoutInflater inflater = LayoutInflater.from(context);
-        final RelativeLayout ret = (RelativeLayout) inflater.inflate(R.layout.message_list_item, parent, false);
+        final RelativeLayout ret = (RelativeLayout) inflater.inflate(R.layout.message_list_item_out, parent, false);
         if (ret != null)
         {
             return populateView(cursor, ret, context);

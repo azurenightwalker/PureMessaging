@@ -22,19 +22,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.androidproductions.puremessaging.data.ConversationContract;
-import com.androidproductions.puremessaging.data.ConversationSummaryContract;
 import com.androidproductions.puremessaging.data.ConversationSummaryCursorAdapter;
 import com.androidproductions.puremessaging.data.MessageHelper;
 
-/**
- * An activity representing a single Conversation detail screen. This
- * activity is only used on handset devices. On tablet-size devices,
- * item details are presented side-by-side with a list of items
- * in a {@link ConversationListActivity}.
- * <p>
- * This activity is mostly just a 'shell' activity containing nothing
- * more than a {@link ConversationFragment}.
- */
+
 public class ConversationDetailActivity extends Activity implements Callbacks, LoaderManager.LoaderCallbacks<Cursor> {
 
     private DrawerLayout mDrawerLayout;
@@ -163,16 +154,11 @@ public class ConversationDetailActivity extends Activity implements Callbacks, L
         {
             public void run()
             {
-                // Highlight the selected item, update the title, and close the drawer
-
-                mDrawerLayout.closeDrawer(Gravity.LEFT);
+            mDrawerLayout.closeDrawer(Gravity.LEFT);
             }
         };
         Handler handler = new Handler();
         handler.post(r);
-
-        // Create a new fragment and specify the planet to show based on position
-
     }
 
     @Override
